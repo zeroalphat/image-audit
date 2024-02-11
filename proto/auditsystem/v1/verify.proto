@@ -4,15 +4,15 @@ package auditsystem.v1;
 option go_package = "github.com/zeroalphat/image-audit/proto/auditsystem/v1";
 
 service ImageAuditService {
-    rpc PutImage(PutImageRequest) returns (PutImageResponse) {};
+    rpc AuditImage(AuditImageRequest) returns (AuditImageResponse) {};
 }
 
-message PutImageRequest {
+message AuditImageRequest {
     string name = 1;
     string digest = 2;
     string stdin_media_type = 3;
 }
 
-message PutImageResponse {
+message AuditImageResponse {
     bool judgement = 1;
 }

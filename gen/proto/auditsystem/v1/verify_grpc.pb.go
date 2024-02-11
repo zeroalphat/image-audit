@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ImageAuditService_PutImage_FullMethodName = "/auditsystem.v1.ImageAuditService/PutImage"
+	ImageAuditService_AuditImage_FullMethodName = "/auditsystem.v1.ImageAuditService/AuditImage"
 )
 
 // ImageAuditServiceClient is the client API for ImageAuditService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ImageAuditServiceClient interface {
-	PutImage(ctx context.Context, in *PutImageRequest, opts ...grpc.CallOption) (*PutImageResponse, error)
+	AuditImage(ctx context.Context, in *AuditImageRequest, opts ...grpc.CallOption) (*AuditImageResponse, error)
 }
 
 type imageAuditServiceClient struct {
@@ -37,9 +37,9 @@ func NewImageAuditServiceClient(cc grpc.ClientConnInterface) ImageAuditServiceCl
 	return &imageAuditServiceClient{cc}
 }
 
-func (c *imageAuditServiceClient) PutImage(ctx context.Context, in *PutImageRequest, opts ...grpc.CallOption) (*PutImageResponse, error) {
-	out := new(PutImageResponse)
-	err := c.cc.Invoke(ctx, ImageAuditService_PutImage_FullMethodName, in, out, opts...)
+func (c *imageAuditServiceClient) AuditImage(ctx context.Context, in *AuditImageRequest, opts ...grpc.CallOption) (*AuditImageResponse, error) {
+	out := new(AuditImageResponse)
+	err := c.cc.Invoke(ctx, ImageAuditService_AuditImage_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (c *imageAuditServiceClient) PutImage(ctx context.Context, in *PutImageRequ
 // All implementations must embed UnimplementedImageAuditServiceServer
 // for forward compatibility
 type ImageAuditServiceServer interface {
-	PutImage(context.Context, *PutImageRequest) (*PutImageResponse, error)
+	AuditImage(context.Context, *AuditImageRequest) (*AuditImageResponse, error)
 	mustEmbedUnimplementedImageAuditServiceServer()
 }
 
@@ -58,8 +58,8 @@ type ImageAuditServiceServer interface {
 type UnimplementedImageAuditServiceServer struct {
 }
 
-func (UnimplementedImageAuditServiceServer) PutImage(context.Context, *PutImageRequest) (*PutImageResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PutImage not implemented")
+func (UnimplementedImageAuditServiceServer) AuditImage(context.Context, *AuditImageRequest) (*AuditImageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AuditImage not implemented")
 }
 func (UnimplementedImageAuditServiceServer) mustEmbedUnimplementedImageAuditServiceServer() {}
 
@@ -74,20 +74,20 @@ func RegisterImageAuditServiceServer(s grpc.ServiceRegistrar, srv ImageAuditServ
 	s.RegisterService(&ImageAuditService_ServiceDesc, srv)
 }
 
-func _ImageAuditService_PutImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PutImageRequest)
+func _ImageAuditService_AuditImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuditImageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ImageAuditServiceServer).PutImage(ctx, in)
+		return srv.(ImageAuditServiceServer).AuditImage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ImageAuditService_PutImage_FullMethodName,
+		FullMethod: ImageAuditService_AuditImage_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ImageAuditServiceServer).PutImage(ctx, req.(*PutImageRequest))
+		return srv.(ImageAuditServiceServer).AuditImage(ctx, req.(*AuditImageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -100,8 +100,8 @@ var ImageAuditService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ImageAuditServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "PutImage",
-			Handler:    _ImageAuditService_PutImage_Handler,
+			MethodName: "AuditImage",
+			Handler:    _ImageAuditService_AuditImage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

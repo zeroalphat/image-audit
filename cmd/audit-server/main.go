@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"log"
+	"log/slog"
 	"net"
 	"os"
 	"os/signal"
@@ -16,17 +16,22 @@ import (
 const address = "localhost:8080"
 
 type auditServer struct {
+	logger *slog.Logger
 	auditsystem.UnimplementedImageAuditServiceServer
 }
 
-func (s *auditServer) PutImage(ctx context.Context, req *auditsystem.PutImageRequest) (*auditsystem.PutImageResponse, error) {
-	return &auditsystem.PutImageResponse{
+func (s *auditServer) VerifyImage(ctx context.Context, req *auditsystem.VerifyImageRequest) (*auditsystem.VerifyImageResponse, error) {
+	s.logger.Info("Receive request", "name", req.Name)
+
+	return &auditsystem.VerifyImageResponse{
 		Judgement: true,
 	}, nil
 }
 
-func NewAuditServer() *auditServer {
-	return &auditServer{}
+func NewAuditServer(logger *slog.Logger) *auditServer {
+	return &auditServer{
+		logger: logger,
+	}
 }
 
 func main() {
@@ -34,18 +39,19 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
 	s := grpc.NewServer()
-	auditsystem.RegisterImageAuditServiceServer(s, NewAuditServer())
+	auditsystem.RegisterImageAuditServiceServer(s, NewAuditServer(logger))
 	reflection.Register(s)
 	go func() {
-		log.Printf("start gRPC server: %v", address)
+		logger.Info("start gRPC server", "address", address)
 		s.Serve(listener)
 	}()
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
-	log.Println("stopping gRPC server...")
+	logger.Info("stopping gRPC server")
 	s.GracefulStop()
 }
