@@ -1,0 +1,24 @@
+syntax = "proto3";
+package auditsystem.v1;
+
+option go_package = "github.com/zeroalphat/image-audit/proto/auditsystem/v1";
+
+message Image {
+    string name = 1;
+    string digest = 2;
+    string stdin_media_type = 3;
+}
+
+message PutImageRequest {
+    string name = 1;
+    string digest = 2;
+    string stdin_media_type = 3;
+}
+
+message PutImageResponse {
+    bool judgement = 1;
+}
+
+service ImageAuditService {
+    rpc PutImage(PutImageRequest) returns (PutImageResponse) {};
+}
