@@ -10,6 +10,7 @@ import (
 	auditsystem "github.com/zeroalphat/image-audit/gen/proto/auditsystem/v1"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 const address = "localhost:8080"
@@ -18,7 +19,7 @@ type auditServer struct {
 	auditsystem.UnimplementedImageAuditServiceServer
 }
 
-func (s *auditServer) Judge(ctx context.Context, req *auditsystem.PutImageRequest) (*auditsystem.PutImageResponse, error) {
+func (s *auditServer) PutImage(ctx context.Context, req *auditsystem.PutImageRequest) (*auditsystem.PutImageResponse, error) {
 	return &auditsystem.PutImageResponse{
 		Judgement: true,
 	}, nil
@@ -36,6 +37,7 @@ func main() {
 
 	s := grpc.NewServer()
 	auditsystem.RegisterImageAuditServiceServer(s, NewAuditServer())
+	reflection.Register(s)
 	go func() {
 		log.Printf("start gRPC server: %v", address)
 		s.Serve(listener)

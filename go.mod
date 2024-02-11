@@ -1,4 +1,4 @@
-module image-audit
+module github.com/zeroalphat/image-audit
 
 go 1.21.6
 
